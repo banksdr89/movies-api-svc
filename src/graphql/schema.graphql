@@ -1,0 +1,36 @@
+type Movie {
+  movieId: ID!
+  imdbId: String!
+  title: String
+  overview: String
+  productionCompanies: String
+  releaseDate: String
+  budget: String
+  revenue: Int
+  runtime: Int
+  language: String
+  genres: String
+  status: String
+  averageRating: Float
+  ratings: [Rating]
+}
+
+type Rating {
+  ratingId: ID!
+  userId: ID!
+  movieId: ID!
+  rating: Float
+  timestamp: String
+}
+
+type Query {
+  """
+  List all movies by pagination
+  """
+  movies(page: Int = 1): [Movie!]!
+
+  """
+  Get specific movie detail by movie id
+  """
+  movieDetails(movieId: ID!): Movie
+}
