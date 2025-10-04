@@ -1,0 +1,8 @@
+limits:
+  max_depth: 100
+  max_height: 200
+  max_aliases: 30
+  max_root_fields: 20
+
+  # Uncomment to enable warn_only mode
+  # warn_only: true

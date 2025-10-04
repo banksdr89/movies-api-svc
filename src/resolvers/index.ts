@@ -1,7 +1,5 @@
-import moviesResolver from './movies';
-// import ratingsResolver from './ratings';
-// import * from './loaders';
+import { moviesResolvers } from './movies';
 
 export const resolvers = {
-  ...moviesResolver,
+  ...moviesResolvers,
 };

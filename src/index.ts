@@ -6,7 +6,6 @@ if (require.main === module) {
     try {
       await createServer();
     } catch (err) {
-      console.error(`Error starting server ${err}`);
       process.exit(1);
     }
   })();

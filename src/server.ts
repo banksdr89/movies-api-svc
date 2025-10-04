@@ -1,39 +1,95 @@
-import express from 'express';
+/**
+ * Initializes and configures the Express + Apollo GraphQL server.
+ *
+ * @module server
+ */
+
+import express, { Request, Response, NextFunction } from 'express';
 import { ApolloServer } from 'apollo-server-express';
-// import { typeDefs, resolvers } from "./schema";
 import path from 'path';
-import cors from 'cors';
+import helmet from 'helmet';
+import rateLimit from 'express-rate-limit';
+import { v4 as uuidv4 } from 'uuid';
 import { readFileSync } from 'fs';
 import { logger } from './utils/logger';
 import { resolvers } from './resolvers';
 import { config } from './config';
+import { ContextAPI } from './utils/interfaces';
+import { moviesLoader } from './loaders/movies.loaders';
+import { MoviesAdapter } from './adapters/movies.adapters';
 
 const schemaPath = path.join(__dirname, 'graphql', 'schema.graphql');
 const typeDefs = readFileSync(schemaPath, 'utf8');
 
+/**
+ * Creates and configures an Apollo GraphQL server.
+ *
+ * @async
+ * @function createServer
+ * @returns {Promise<import("express").Express>} An Express app with Apollo middleware applied.
+ **/
 export const createServer = async () => {
   try {
     const app = express();
 
-    app.use((req, res, next) => {
-      const { method, url, headers, query, body, params } = req;
+    /* MIDDLEWARE */
+    app.use(helmet());
+
+    /* RATE LIMITING */
+    const rateLimiter = rateLimit({
+      windowMs: 15 * 60 * 1000,
+      max: 100,
+      message: 'Too many requests, please try again later.',
+    });
+
+    app.use(rateLimiter);
+
+    /* TRACING */
+    app.use((req: Request, res: Response, next: NextFunction) => {
+      const traceRequestId = uuidv4();
+      (req as any).traceRequestId = traceRequestId;
+
       logger.info(
         {
-          method,
-          url,
-          query,
-          body,
-          params,
+          traceRequestId,
+          method: req.method,
+          url: req.url,
+          query: req.query,
+          body: req.body,
+          headers: req.headers,
+          params: req.params,
         },
-        'Incoming request',
+        'Request initiated',
       );
+
+      res.on('finish', () => {
+        logger.info(
+          {
+            traceRequestId,
+            statusCode: res.statusCode,
+          },
+          'Request completed',
+        );
+      });
+
       next();
     });
 
-    const server = new ApolloServer({
+    /* SERVER PROVISION */
+    const server = new ApolloServer<ContextAPI>({
       typeDefs,
       resolvers,
       introspection: config.env !== 'production',
+      context: async ({ req, res }) => {
+        return {
+          req,
+          res,
+          logger,
+          traceRequestId: (req as any).traceRequestId,
+          moviesLoader: moviesLoader(),
+          moviesAdapter: MoviesAdapter,
+        };
+      },
     });
 
     await server.start();
@@ -42,9 +98,10 @@ export const createServer = async () => {
 
     const port = config.port;
     app.listen(port, () => {
-      console.log(`Server listening on http://localhost:${port}/graphql`);
+      logger.info(`Server listening on http://localhost:${port}/graphql`);
     });
-  } catch (err) {
+  } catch (err: any) {
+    logger.error(`Server startup error: ${err}`);
     process.exit(1);
   }
 };

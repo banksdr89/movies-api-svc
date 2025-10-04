@@ -1,34 +1,32 @@
-import Joi from 'joi';
-import DataLoader from 'dataloader';
-import db from '../../utils/db';
-import { paginationSchema } from '../../utils/validation';
-import { errorHandler } from '../../utils/errorHandler';
+import { GraphQLResolveInfo } from 'graphql';
+import { ContextAPI } from '../../utils/interfaces';
 
-const PAGE_SIZE = Number(process.env.PAGE_SIZE) || 50;
-
-const Query = {
-  movies: (_: any, args: { page?: number }) => {
-    const { error, value } = paginationSchema.validate(args);
-    
-    if (error) {
-      throw errorHandler(`Invalid page number: ${error.message}`, 400);
-    }
-
-    const page = value.page;
-    const offset = (page - 1) * PAGE_SIZE;
-    const rows = db
-      .prepare(
-        `SELECT *
-           FROM movies
-           LIMIT ? OFFSET ?`,
-      )
-      .all(PAGE_SIZE, offset);
-
-    return rows.map((row: any) => ({
-      ...row,
-      budget: `$${row.budget.toLocaleString('en-US')}`,
-    }));
+/**
+ * GraphQL resolvers for the Movies API Subgraph.
+ *
+ * @namespace resolvers
+ */
+export const moviesResolvers = {
+  Query: {
+    /**
+     * Fetches a paginated list of movies.
+     *
+     * @function movies
+     * @param {object} _ - Unused root resolver argument.
+     * @param {object} args - Query arguments.
+     * @param {number} [args.page=1] - The page number.
+     * @param {ContextAPI} context - GraphQL context including loaders and adapters.
+     * @param {GraphQLResolveInfo} info - Resolver info.
+     * @returns {Movies[]} Paginated list of movies.
+     */
+    movies: (
+      _: unknown,
+      args: { page?: number },
+      context: ContextAPI,
+      info?: GraphQLResolveInfo,
+    ) => {
+      context.logger.info({ event: 'movies', msg: 'moviesResolver', args });
+      return context.moviesAdapter.getAllMovies(args, context, info);
+    },
   },
 };
-
-export default { Query };
