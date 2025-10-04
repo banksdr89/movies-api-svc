@@ -61,16 +61,6 @@ type Movie {
   Current release status (e.g., Released, Post Production).
   """
   status: String
-
-  """
-  Average rating calculated from all ratings of the movie.
-  """
-  averageRating: Float
-
-  """
-  List of user ratings for this movie.
-  """
-  ratings: [Rating]
 }
 
 """

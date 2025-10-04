@@ -50,3 +50,19 @@ movies-api-svc/
 
 
 ```
+
+## Client Query
+
+List All Movies for client playground
+
+```bash
+ *   query {
+ *     movies {
+ *       imdbId
+ *       title
+ *       genres
+ *       releaseDate
+ *       budget
+ *     }
+ *   }
+```

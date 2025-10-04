@@ -32,8 +32,10 @@ export const createServer = async () => {
   try {
     const app = express();
 
-    /* MIDDLEWARE */
-    app.use(helmet());
+    // /* MIDDLEWARE */
+    if (config.env === 'production') {
+      app.use(helmet());
+    }
 
     /* RATE LIMITING */
     const rateLimiter = rateLimit({

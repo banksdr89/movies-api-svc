@@ -3,7 +3,7 @@ import { paginationSchema } from '../utils/validation';
 import { errorHandler } from '../utils/errorHandler';
 import { config } from '../config';
 import { Movies } from '../utils/interfaces';
-import { GET_ALL_MOVIES } from '../db/queries/movies.queries';
+import { selectFields, buildSQL } from '../utils/index';
 
 /**
  * Adapter for retrieving movies from the database.
@@ -31,12 +31,22 @@ export class MoviesAdapter {
     const pageSize = config.paginationSize;
     const offset = (page - 1) * pageSize;
 
+    const selectedFields = selectFields(info);
+    const columns = selectedFields.includes('*')
+      ? '*'
+      : selectedFields.filter(Boolean).join(', ') || '*';
+
     try {
-      const rows = db.prepare(GET_ALL_MOVIES).all(pageSize, offset);
-      return rows.map((row: any) => ({
-        ...row,
-        budget: `$${row.budget.toLocaleString('en-US')}`,
-      }));
+      const sql = buildSQL(columns);
+      const rows: any = db.prepare(sql).all(pageSize, offset);
+      if (columns.includes('budget')) {
+        return rows.map((row: any) => ({
+          ...row,
+          budget: `$${row.budget.toLocaleString('en-US')}`,
+        }));
+      } else {
+        return rows;
+      }
     } catch (err: any) {
       context.logger.error(
         { event: 'movies', msg: info.fieldName },
