@@ -20,12 +20,15 @@ jobs:
           node-version: 20
 
       - name: Install Dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install
 
       - name: Run Linter
         run: pnpm lint
 
-      - name: Run Tests in Docker
+      - name: Run Tests
+        run: pnpm tests
+
+      - name: Run Docker
         run: |
           docker build --target build -t movies-api-svc .
           docker run --volume=/movies-api-svc:/srv/movies-api-svc --name=movies-api-svc --workdir=/srv/movies-api-svc -p 4000:4000 --restart=on-failure:0 -t -d banksdr/movies-api-svc:latest
