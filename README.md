@@ -1,11 +1,11 @@
-# 🎬 Movies API Service
+# Movies API Service
 
-A federated GraphQL service for movies and ratings, built with **Node.js**, **TypeScript**, **Fastify/Express**, and **Mercurius/Apollo Federation**.  
-This service demonstrates **DataLoader batching**, **role-based context**, and **scalable resolver design** for GraphQL microservices.
+A GraphQL service for movies and ratings, built with **Node.js**, **TypeScript**, and **Apollo/Express**.  
+This service demonstrates **DataLoader batching**, **context**, and **scalable resolver design** for GraphQL microservices.
 
 ---
 
-Apollo GraphQL (federation-ready) Movie API scaffold.
+Apollo GraphQL Movie API scaffold.
 
 ## Quickstart (local)
 
@@ -15,17 +15,6 @@ Apollo GraphQL (federation-ready) Movie API scaffold.
 4. Open `http://localhost:4000/graphql`
 
 ## Features
-
-- GraphQL schema (movies)
-- DataLoader to prevent N+1
-- Pino logging + traceId
-- Rate limiting, depth & complexity limits
-- Docker + docker-compose for local run
-- Unit tests (Jest) + integration testing hooks
-- CI/CD skeleton (GitHub Actions -> ECR -> ECS/Fargate)
-- Twelve-Factor design (config via ENV)
-
-## 🚀 Features
 
 - **GraphQL API** with schema-first development.
 - **Apollo Server** ready.
@@ -38,7 +27,7 @@ Apollo GraphQL (federation-ready) Movie API scaffold.
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 
 ```bash
 movies-api-svc/
@@ -53,7 +42,7 @@ movies-api-svc/
  │   ├── config.ts        # Configuration
  │   ├── server.ts        # Apollo server setup
  │   └── index.ts         # App entrypoint
- ├── dists/               # Application build
+ ├── dist/                # Application build
  ├── .github/workflows/   # GitHub Actions CI/CD
  ├── package.json
  ├── tsconfig.json
