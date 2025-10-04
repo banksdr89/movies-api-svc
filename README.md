@@ -9,7 +9,7 @@ Apollo GraphQL Movie API scaffold.
 
 ## Quickstart (local)
 
-1. Copy `.env.example` to `.env` and set DB paths to your local sqlite files. Set `NODE_ENV=development` and `MOVIES_DB_PATH=/db/movies/movies.db` which points to the file structure. 
+1. Copy `.env.example` to `.env` and set DB paths to your local sqlite files. Set `NODE_ENV=development` and `MOVIES_DB_PATH=/db/movies/movies.db` which points to the file structure.
 2. `pnpm install`
 3. `pnpm dev`
 4. Open `http://localhost:4000/graphql`

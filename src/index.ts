@@ -5,7 +5,7 @@ if (require.main === module) {
   (async () => {
     try {
       await createServer();
-    } catch (err) {
+    } catch {
       process.exit(1);
     }
   })();
