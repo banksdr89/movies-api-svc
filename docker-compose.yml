@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  api:
+    build: .
+    container_name: movies-api-svc
+    ports:
+      - '4000:4000'
+    environment:
+      NODE_ENV: production
+    volumes:
+      # Mount code for hot reload if you want in dev
+      - .:/app
+      - /app/node_modules
+      # Mount SQLite DB file so it's persistent and editable from host
+      - ./src/db/movies/movies.db:/app/db/movies/movies.db

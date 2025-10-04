@@ -1,0 +1,67 @@
+# Node modules
+node_modules/
+.pnp/
+.pnp.js
+
+# pnpm
+pnpm-lock.yaml
+
+# TypeScript
+dist/
+build/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+*.pid
+*.seed
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# MacOS
+.DS_Store
+
+# Docker
+docker-compose.override.yml
+*.dockerignore
+docker-compose.override.*.yml
+*.env.docker
+
+# Nodemon
+.nodemon*
+
+# Redis
+dump.rdb
+*.rdb
+appendonly.aof
+
+# Coverage
+coverage/
+*.lcov
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*.old
+
+# Logs and cache
+.cache/
+.cache-loader/
+.eslintcache
